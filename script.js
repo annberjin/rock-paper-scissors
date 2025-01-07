@@ -8,6 +8,37 @@ let scores = JSON.parse(localStorage.getItem('score')) || {
 
 updateScores();
 
+document.querySelector('.js-autoplay-btn').addEventListener('click', () => {
+  autoPlay();
+});
+
+let isAutoPlay = false;
+let intervalID;
+
+function autoPlay() {
+  if (!isAutoPlay) {
+    intervalID = setInterval(function() {
+      playerMove = pickComputerMove();
+      playGame(playerMove)}, 1000);
+    isAutoPlay = true;
+  } else {
+    clearInterval(intervalID);
+    isAutoPlay = false;
+  }
+}
+
+document.querySelector('.js-rock-button').addEventListener('click', () => {
+  playGame('rock');
+});
+
+document.querySelector('.js-paper-button').addEventListener('click', () => {
+  playGame('paper');
+});
+
+document.querySelector('.js-scissors-button').addEventListener('click', () => {
+  playGame('scissors');
+});
+
 function playGame(playerMove) {
   const computerMove = pickComputerMove();
   let result = '';
@@ -78,10 +109,16 @@ function updateScores() {
   document.querySelector('.js-scores').innerHTML = `Wins: ${scores.wins} Losses: ${scores.losses} Ties: ${scores.ties}`;
 }
 
+document.querySelector('.js-reset-button').addEventListener('click', () => {
+  resetScores();
+});
+
 function resetScores() {
   scores["wins"] = 0;
   scores["losses"] = 0;
   scores["ties"] = 0;
   localStorage.removeItem('score');
+  document.querySelector('.js-results').innerHTML = ''; //Resets the screen to default
+  document.querySelector('.js-moves').innerHTML = '';
   updateScores();
 }
